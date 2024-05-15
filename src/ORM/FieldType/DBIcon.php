@@ -59,7 +59,7 @@ class DBIcon extends DBComposite
             $data = json_decode($this->getData(), true);
 
             if ($data && isset($data['source'])) {
-                return $data['source'];
+                return $data['source'] ? $data['source'] : $key;
             }
         }
     }
@@ -112,12 +112,12 @@ class DBIcon extends DBComposite
 
     public function getIconSetName()
     {
-        return $this->getParse('set')['name'];
+        return $this->getParse('set') ? $this->getParse('set')['name'] : null;
     }
 
     public function getIconType()
     {
-        return $this->getParse('set')['type'];
+        return $this->getParse('set') ? $this->getParse('set')['type'] : null;
     }
 
     /**

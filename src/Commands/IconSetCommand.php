@@ -33,7 +33,7 @@ class IconSetCommand extends GeneratorCommand
         if ($setType == 'font') {
             $sourceExample = '(eg: https://cdn.myicons.net/icons.min.css)';
         } else if ($setType == 'dir') {
-            $sourceExample = '(within the public dir, eg: icons)';
+            $sourceExample = '(within the public dir, eg: assets/icons)';
         } else if ($setType == 'upload') {
             $sourceExample = '(eg: icons)';
         }
@@ -45,6 +45,7 @@ class IconSetCommand extends GeneratorCommand
         }
 
         $setOptions = [
+            'vector' => true,
             'type' => $setType,
             'source' => $source,
         ];
@@ -77,7 +78,7 @@ class IconSetCommand extends GeneratorCommand
 
         $fs = new Filesystem();
 
-        if ($setType == 'font' || $setType == 'dir' || $setType == 'json') {
+        if ($setType == 'font' || $setType == 'json') { //  || $setType == 'dir'
 
             if ($setType == 'json') {
                 $schemaTemplate = 'schema-json.json';
@@ -110,7 +111,7 @@ class IconSetCommand extends GeneratorCommand
 
             if (!$fs->exists($path)) {
                 $io = new InputOutput($input, $output);
-                $io->info('Youn need to create `'.$source.'` dir in `'.ASSETS_DIR.'` through CMS (/admin/assets)');
+                $io->info('Youn need to create `'.$source.'` dir in `'.ASSETS_DIR.'` through CMS (/admin/assets). Make sure your uploaded icons in this folder are published.');
             }
         }
 

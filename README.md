@@ -35,6 +35,32 @@ php taz iconset
 php taz vendor:icon-field:templates
 ```
 
+## Quick Bootstrap icon set setup
+
+1) Copy json set of all current bootstrap icons
+
+```bash
+cp vendor/goldfinch/icon-field/examples/icon-bootstrap.json app/_schema/icon-bootstrap.json
+```
+
+2) Add config for this set
+
+```yml
+Goldfinch\IconField\Forms\IconField:
+  icons_sets:
+    bootstrap:
+      type: font
+      source: 'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css'
+```
+
+3) Use field with this set
+
+```php
+use Goldfinch\IconField\Forms\IconField;
+
+IconField::create('bootstrap', 'Icon')
+```
+
 ## Usage
 
 ```php
@@ -81,6 +107,21 @@ Goldfinch\IconField\Forms\IconField:
       source: 'vite:themes/main/src/icons.scss'
 
 ```
+
+## Previews
+
+#### Icon (unloaded sets)
+![Icon fields unloaded](screenshots/icon-fields-unloaded.png)
+#### Icon (loaded sets)
+![Icon fields](screenshots/icon-fields.png)
+#### Demo output (all types)
+![Demo output](screenshots/icon-field-demo-output.png)
+
+## Sidenotes
+
+* If your set contains icons as PNG files, make sure to set property `vector: false` in your set configuration
+
+* When using `dir` set type, your icon dir store in public (eg: `public/my-icons`) might have access issues due to rules in `.htaccess`. If that's your case, just move your icons to `assets` dir, (eg: `public/assets/my-icons`) and update `source` parameter in your .yml file.
 
 ## License
 

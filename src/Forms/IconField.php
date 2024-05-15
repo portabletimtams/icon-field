@@ -147,7 +147,7 @@ class IconField extends FormField
     {
         $cfg = $this->iconsSetConfig;
 
-        $cfgHash = md5(json_encode($cfg));
+        $cfgHash = md5($this->iconsSet . json_encode($cfg));
 
         $cache = Injector::inst()->get(CacheInterface::class . '.GoldfinchIconField');
 
@@ -222,7 +222,6 @@ class IconField extends FormField
                     'value' => $ex[0],
                     'source' => $sourcePath . '/' . $filename,
                 ];
-
                 $item['admin_template'] = $this->renderIconAdminTemplate($item);
                 // $item['template'] = $this->renderIconTemplate($item); // commented out as seem to be unused
                 $schemaList[] = $item;
@@ -234,10 +233,12 @@ class IconField extends FormField
 
             if ($targetFolder) {
 
-                $folder = File::get()->byID(1);
+                // $folder = File::get()->byID(1);
 
-                if ($folder && $folder == Folder::class) {
-                    foreach ($folder->myChildren() as $file) {
+                // if ($folder && $folder == Folder::class) {
+                if ($targetFolder && $targetFolder == Folder::class) {
+                    // foreach ($folder->myChildren() as $file) {
+                    foreach ($targetFolder->myChildren() as $file) {
 
                         $item = [
                             'title' => $file->Title,
@@ -354,12 +355,24 @@ class IconField extends FormField
                     'display' => 'inline-block',
                     'width' => '32px',
                     'height' => '32px',
-                    'mask-size' => 'contain',
-                    'mask-repeat' => 'no-repeat',
-                    'mask-position' => 'center',
-                    'mask-image' => 'url(' . $item['source'] . ')',
-                    'background-color' => '#43536d',
                 ];
+
+                if (isset($cfg['vector']) && $cfg['vector'] === false) {
+                    $inlineStyle += [
+                        'background-size' => 'contain',
+                        'background-repeat' => 'no-repeat',
+                        'background-position' => 'center',
+                        'background-image' => 'url(' . $item['source'] . ')',
+                    ];
+                } else {
+                    $inlineStyle += [
+                        'mask-size' => 'contain',
+                        'mask-repeat' => 'no-repeat',
+                        'mask-position' => 'center',
+                        'mask-image' => 'url(' . $item['source'] . ')',
+                        'background-color' => '#43536d',
+                    ];
+                }
             }
 
         } else {
@@ -373,12 +386,24 @@ class IconField extends FormField
                     'display' => 'inline-block',
                     'width' => '32px',
                     'height' => '32px',
-                    'mask-size' => 'contain',
-                    'mask-repeat' => 'no-repeat',
-                    'mask-position' => 'center',
-                    'mask-image' => 'url(' . $item['source'] . ')',
-                    'background-color' => '#43536d',
                 ];
+
+                if (isset($cfg['vector']) && $cfg['vector'] === false) {
+                    $inlineStyle += [
+                        'background-size' => 'contain',
+                        'background-repeat' => 'no-repeat',
+                        'background-position' => 'center',
+                        'background-image' => 'url(' . $item['source'] . ')',
+                    ];
+                } else {
+                    $inlineStyle += [
+                        'mask-size' => 'contain',
+                        'mask-repeat' => 'no-repeat',
+                        'mask-position' => 'center',
+                        'mask-image' => 'url(' . $item['source'] . ')',
+                        'background-color' => '#43536d',
+                    ];
+                }
             }
 
             // apply custom styles
@@ -419,15 +444,16 @@ class IconField extends FormField
         // !do template render in place instead (only for admin template for now, as the front-end templates can be re-declared by the user)
         if (strpos($template, 'Types/Admin') !== false) {
 
-            if (
-                $template == 'Goldfinch/IconField/Types/Admin/DirItem' ||
-                $template == 'Goldfinch/IconField/Types/Admin/JsonItem' ||
-                $template == 'Goldfinch/IconField/Types/Admin/UploadItem'
-            ) {
-                return '<i class="'.$item['value'].'" title="'.$item['title'].'"></i>';
-            } else if ($template == 'Goldfinch/IconField/Types/Admin/FontItem') {
-                return '<i title="'.$item['title'].'" class="'.$item['value'].'"'.($inlineStyleStr ? ' style="'.$inlineStyleStr.'"' : '').'></i>';
-            }
+            // if (
+            //     $template == 'Goldfinch/IconField/Types/Admin/DirItem' ||
+            //     $template == 'Goldfinch/IconField/Types/Admin/JsonItem' ||
+            //     $template == 'Goldfinch/IconField/Types/Admin/UploadItem'
+            // ) {
+            //     return '<i title="'.$item['title'].'" class="'.$item['value'].'"></i>';
+            // } else if ($template == 'Goldfinch/IconField/Types/Admin/FontItem') {
+            //     return '<i title="'.$item['title'].'" class="'.$item['value'].'"'.($inlineStyleStr ? ' style="'.$inlineStyleStr.'"' : '').'></i>';
+            // }
+            return '<i title="'.$item['title'].'" class="'.$item['value'].'"'.($inlineStyleStr ? ' style="'.$inlineStyleStr.'"' : '').'></i>';
         } else {
             // ! probably not in used (since ['template'] is commented out)
 
@@ -593,6 +619,7 @@ class IconField extends FormField
                 'set' => [
                     'name' => $this->iconsSet,
                     'type' => isset($set['type']) ? $set['type'] : null,
+                    'vector' => isset($set['vector']) ? $set['vector'] : true,
                     // 'source' => $set['source'],
                 ],
                 'title' => $item && isset($item['title']) ? $item['title'] : '',
