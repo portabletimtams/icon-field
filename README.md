@@ -121,7 +121,7 @@ Goldfinch\IconField\Forms\IconField:
 
 * If your set contains icons as PNG files, make sure to set property `vector: false` in your set configuration
 
-* When using `dir` set type, your icon dir store in public (eg: `public/my-icons`) might have access issues due to rules in `.htaccess`. If that's your case, just move your icons to `assets` dir, (eg: `public/assets/my-icons`) and update `source` parameter in your .yml file.
+* When using `dir` set type, direct folder for icons in public (eg: `public/my-icons`) might have access issues due to rules in `.htaccess`. If that's your case, just move your dir with icons to `assets` dir, (eg: `public/assets/my-icons`) and update `source` parameter in config file.
 
 ## License
 
