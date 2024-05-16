@@ -64,7 +64,7 @@ class IconField extends FormField
     {
         return LiteralField::create(
             $this->getName().'Icon',
-            '<div class="ggp__preview" data-goldfinch-icon="preview"></div>',
+            '<div class="ggp__preview" data-goldfinch-icon="preview"></div>'
         );
     }
 
@@ -82,7 +82,6 @@ class IconField extends FormField
         $count = 0;
 
         if (isset($values)) {
-
             $count = count($values);
 
             foreach ($values as $v) {
@@ -112,7 +111,6 @@ class IconField extends FormField
         $this->initSetsRequirements();
 
         if (! $static) {
-
             $this->setIconsSet($set);
 
             Requirements::css('goldfinch/icon-field:client/dist/icon-styles.css');
@@ -122,7 +120,9 @@ class IconField extends FormField
         }
 
         if (! $this->iconsSetConfig) {
-            $this->setDescription('<span style="color: red">The set <b>'.$set.'</b> does not exist in YAML config.</span>');
+            $this->setDescription(
+                '<span style="color: red">The set <b>'.$set.'</b> does not exist in YAML config.</span>'
+            );
         }
 
         parent::__construct($name, $title, $value);
@@ -152,7 +152,6 @@ class IconField extends FormField
         $cache = Injector::inst()->get(CacheInterface::class.'.GoldfinchIconField');
 
         if ($cache->has($cfgHash)) {
-
             $this->iconsList = json_decode($cache->get($cfgHash), true);
 
             return;
@@ -175,8 +174,7 @@ class IconField extends FormField
         }
 
         if ($cfg['type'] == 'font') {
-
-            $fs = new Filesystem;
+            $fs = new Filesystem();
 
             $schema = BASE_PATH.'/app/_schema/icon-'.$this->iconsSet.'.json';
 
@@ -185,7 +183,6 @@ class IconField extends FormField
                 $content = json_decode($content, true);
 
                 if ($content && is_array($content) && count($content)) {
-
                     $schemaList = $content;
 
                     foreach ($schemaList as $k => $sl) {
@@ -204,16 +201,13 @@ class IconField extends FormField
                     }
                 }
             }
-
         } elseif ($cfg['type'] == 'dir') {
-
             $sourcePath = '/'.$cfg['source'];
 
             $finder = new Finder();
             $files = $finder->in(PUBLIC_PATH.$sourcePath)->files();
 
             foreach ($files as $file) {
-
                 $filename = $file->getFilename();
                 $ex = explode('.', $filename);
 
@@ -226,20 +220,18 @@ class IconField extends FormField
                 // $item['template'] = $this->renderIconTemplate($item); // commented out as seem to be unused
                 $schemaList[] = $item;
             }
-
         } elseif ($cfg['type'] == 'upload') {
-
-            $targetFolder = File::get()->filter(['ClassName' => Folder::class, 'Name' => $cfg['source']])->first();
+            $targetFolder = File::get()
+                ->filter(['ClassName' => Folder::class, 'Name' => $cfg['source']])
+                ->first();
 
             if ($targetFolder) {
-
                 // $folder = File::get()->byID(1);
 
                 // if ($folder && $folder == Folder::class) {
                 if ($targetFolder && $targetFolder == Folder::class) {
                     // foreach ($folder->myChildren() as $file) {
                     foreach ($targetFolder->myChildren() as $file) {
-
                         $item = [
                             'title' => $file->Title,
                             'value' => $file->ID,
@@ -254,10 +246,8 @@ class IconField extends FormField
             } else {
                 // specified folder in .yml is not found
             }
-
         } elseif ($cfg['type'] == 'json') {
-
-            $fs = new Filesystem;
+            $fs = new Filesystem();
 
             $schema = BASE_PATH.'/app/_schema/'.$cfg['source'];
 
@@ -266,7 +256,6 @@ class IconField extends FormField
                 $content = json_decode($content, true);
 
                 if ($content && is_array($content) && count($content)) {
-
                     $schemaList = $content;
 
                     foreach ($schemaList as $k => $sl) {
@@ -285,7 +274,6 @@ class IconField extends FormField
                     }
                 }
             }
-
         }
 
         $this->iconsList = $schemaList;
@@ -315,21 +303,13 @@ class IconField extends FormField
         }
 
         if ($cfg['type'] == 'font') {
-
             $template = $primaryPath.'FontItem';
-
         } elseif ($cfg['type'] == 'dir') {
-
             $template = $primaryPath.'DirItem';
-
         } elseif ($cfg['type'] == 'upload') {
-
             $template = $primaryPath.'UploadItem';
-
         } elseif ($cfg['type'] == 'json') {
-
             $template = $primaryPath.'JsonItem';
-
         }
 
         if ($value) {
@@ -348,9 +328,7 @@ class IconField extends FormField
         }
 
         if ($admin) {
-
             if ($cfg['type'] == 'upload' || $cfg['type'] == 'dir' || $cfg['type'] == 'json') {
-
                 $inlineStyle = [
                     'display' => 'inline-block',
                     'width' => '32px',
@@ -374,14 +352,11 @@ class IconField extends FormField
                     ];
                 }
             }
-
         } else {
-
             $inlineStyle = [];
 
             // defaults
             if ($cfg['type'] == 'upload' || $cfg['type'] == 'dir' || $cfg['type'] == 'json') {
-
                 $inlineStyle = [
                     'display' => 'inline-block',
                     'width' => '32px',
@@ -443,7 +418,6 @@ class IconField extends FormField
 
         // !do template render in place instead (only for admin template for now, as the front-end templates can be re-declared by the user)
         if (strpos($template, 'Types/Admin') !== false) {
-
             // if (
             //     $template == 'Goldfinch/IconField/Types/Admin/DirItem' ||
             //     $template == 'Goldfinch/IconField/Types/Admin/JsonItem' ||
@@ -453,12 +427,20 @@ class IconField extends FormField
             // } else if ($template == 'Goldfinch/IconField/Types/Admin/FontItem') {
             //     return '<i title="'.$item['title'].'" class="'.$item['value'].'"'.($inlineStyleStr ? ' style="'.$inlineStyleStr.'"' : '').'></i>';
             // }
-            return '<i title="'.$item['title'].'" class="'.$item['value'].'"'.($inlineStyleStr ? ' style="'.$inlineStyleStr.'"' : '').'></i>';
+            return '<i title="'.
+                $item['title'].
+                '" class="'.
+                $item['value'].
+                '"'.
+                ($inlineStyleStr ? ' style="'.$inlineStyleStr.'"' : '').
+                '></i>';
         } else {
             // ! probably not in used (since ['template'] is commented out)
 
             // front-end (through ss template)
-            return $this->customise(ArrayData::create(['Icon' => $item, 'InlineStyle' => $inlineStyleStr]))->renderWith($template)->RAW();
+            return $this->customise(ArrayData::create(['Icon' => $item, 'InlineStyle' => $inlineStyleStr]))
+                ->renderWith($template)
+                ->RAW();
         }
     }
 
@@ -492,7 +474,6 @@ class IconField extends FormField
 
         if ($fonts && is_array($fonts)) {
             foreach ($fonts as $include) {
-
                 // vite link
                 if (substr($include, 0, 5) == 'vite:') {
                     $include = substr($include, 5);
@@ -519,9 +500,7 @@ class IconField extends FormField
     {
         $name = $this->getName();
 
-        $keyValue = $this->fieldKey
-            ? $this->fieldKey->dataValue()
-            : null;
+        $keyValue = $this->fieldKey ? $this->fieldKey->dataValue() : null;
 
         $field = HiddenField::create("{$name}[Key]", 'Key');
 
@@ -672,10 +651,7 @@ class IconField extends FormField
 
             $dataObject->$keyField = $this->fieldKey->dataValue();
 
-            if (
-                $dataObject->$keyField &&
-                $dataObject->$keyField != ''
-            ) {
+            if ($dataObject->$keyField && $dataObject->$keyField != '') {
                 $dataObject->$dataField = $this->fieldData->dataValue();
             } else {
                 $dataObject->$dataField = null;

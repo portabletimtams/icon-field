@@ -21,7 +21,6 @@ class IconTemplatesCommand extends GeneratorCommand
         $theme = $templater->defineTheme();
 
         if (is_string($theme)) {
-
             $componentPathTemplates = BASE_PATH.'/vendor/goldfinch/icon-field/templates/';
             $componentPath = $componentPathTemplates.'Goldfinch/IconField/';
             $themeTemplates = 'themes/'.$theme.'/templates/';

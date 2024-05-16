@@ -90,7 +90,7 @@
         + (vals.includes(v.toString()) ? true : false)
         + '"><label>'
         + value.admin_template
-        + '</label></li>',
+          + '</label></li>',
       )
     }
 
