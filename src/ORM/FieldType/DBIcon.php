@@ -9,11 +9,12 @@ use SilverStripe\ORM\FieldType\DBComposite;
 class DBIcon extends DBComposite
 {
     /**
-     * @var string $locale
+     * @var string
      */
     protected $locale = null;
 
     protected $iconSize = null;
+
     protected $iconColor = null;
 
     /**
@@ -97,7 +98,7 @@ class DBIcon extends DBComposite
     {
         $data = $this->getData();
 
-        if (!$data) {
+        if (! $data) {
             return null;
         }
 
@@ -121,12 +122,11 @@ class DBIcon extends DBComposite
     }
 
     /**
-     *
      * @return string
      */
     public function getValue()
     {
-        if (!$this->exists()) {
+        if (! $this->exists()) {
             return null;
         }
 
@@ -150,13 +150,14 @@ class DBIcon extends DBComposite
     }
 
     /**
-     * @param string $key
-     * @param bool $markChanged
+     * @param  string  $key
+     * @param  bool  $markChanged
      * @return $this
      */
     public function setKey($key, $markChanged = true)
     {
         $this->setField('Key', $key, $markChanged);
+
         return $this;
     }
 
@@ -169,8 +170,8 @@ class DBIcon extends DBComposite
     }
 
     /**
-     * @param mixed $data
-     * @param bool $markChanged
+     * @param  mixed  $data
+     * @param  bool  $markChanged
      * @return $this
      */
     public function setData($data, $markChanged = true)
@@ -180,11 +181,12 @@ class DBIcon extends DBComposite
             $data = (float) $data;
         }
         $this->setField('Data', $data, $markChanged);
+
         return $this;
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function exists()
     {
@@ -199,16 +201,18 @@ class DBIcon extends DBComposite
     public function hasData()
     {
         $a = $this->getData();
-        return !empty($a) && is_numeric($a);
+
+        return ! empty($a) && is_numeric($a);
     }
 
     /**
-     * @param string $locale
+     * @param  string  $locale
      * @return $this
      */
     public function setLocale($locale)
     {
         $this->locale = $locale;
+
         return $this;
     }
 
@@ -226,8 +230,8 @@ class DBIcon extends DBComposite
      *
      * Used by {@link SearchContext}, {@link ModelAdmin}, {@link DataObject::scaffoldFormFields()}
      *
-     * @param string $title Optional. Localized title of the generated instance
-     * @param array $params
+     * @param  string  $title  Optional. Localized title of the generated instance
+     * @param  array  $params
      * @return FormField
      */
     public function scaffoldFormField($title = null, $params = null)
@@ -238,7 +242,7 @@ class DBIcon extends DBComposite
             $static = false;
         }
 
-        if (!isset($params['set']['name']) && $data = $this->getData()) {
+        if (! isset($params['set']['name']) && $data = $this->getData()) {
             $params = json_decode($data, true);
             if (isset($params['set']['name'])) {
                 $set = $params['set']['name'];

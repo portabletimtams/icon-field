@@ -1,12 +1,13 @@
 {
   "src/icon-styles.scss": {
     "file": "icon-styles.css",
-    "isEntry": true,
-    "src": "src/icon-styles.scss"
+    "src": "src/icon-styles.scss",
+    "isEntry": true
   },
   "src/icon.js": {
     "file": "icon.js",
-    "isEntry": true,
-    "src": "src/icon.js"
+    "name": "icon",
+    "src": "src/icon.js",
+    "isEntry": true
   }
 }

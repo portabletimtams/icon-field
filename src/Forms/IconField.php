@@ -2,23 +2,23 @@
 
 namespace Goldfinch\IconField\Forms;
 
+use Goldfinch\IconField\ORM\FieldType\DBIcon;
 use InvalidArgumentException;
+use Psr\SimpleCache\CacheInterface;
 use SilverStripe\Assets\File;
 use SilverStripe\Assets\Folder;
-use SilverStripe\ORM\ArrayList;
-use Swordfox\Vite\Helpers\Vite;
-use SilverStripe\View\ArrayData;
-use SilverStripe\Forms\FormField;
-use Psr\SimpleCache\CacheInterface;
-use SilverStripe\Forms\HiddenField;
-use SilverStripe\View\Requirements;
-use SilverStripe\Forms\LiteralField;
-use Symfony\Component\Finder\Finder;
 use SilverStripe\Core\Injector\Injector;
+use SilverStripe\Forms\FormField;
+use SilverStripe\Forms\HiddenField;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObjectInterface;
 use SilverStripe\ORM\FieldType\DBHTMLText;
+use SilverStripe\View\ArrayData;
+use SilverStripe\View\Requirements;
+use Swordfox\Vite\Helpers\Vite;
 use Symfony\Component\Filesystem\Filesystem;
-use Goldfinch\IconField\ORM\FieldType\DBIcon;
+use Symfony\Component\Finder\Finder;
 
 class IconField extends FormField
 {
@@ -63,7 +63,7 @@ class IconField extends FormField
     public function getPreviewField()
     {
         return LiteralField::create(
-            $this->getName() . 'Icon',
+            $this->getName().'Icon',
             '<div class="ggp__preview" data-goldfinch-icon="preview"></div>',
         );
     }
@@ -89,7 +89,7 @@ class IconField extends FormField
                 $icon = $this->getIconByKey($v);
 
                 if (isset($icon['admin_template'])) {
-                    $html .= '<li data-value="'.$v.'">' . $icon['admin_template'] . '</li>';
+                    $html .= '<li data-value="'.$v.'">'.$icon['admin_template'].'</li>';
                 }
             }
         }
@@ -111,7 +111,7 @@ class IconField extends FormField
 
         $this->initSetsRequirements();
 
-        if (!$static) {
+        if (! $static) {
 
             $this->setIconsSet($set);
 
@@ -121,7 +121,7 @@ class IconField extends FormField
             $this->setIconsList();
         }
 
-        if (!$this->iconsSetConfig) {
+        if (! $this->iconsSetConfig) {
             $this->setDescription('<span style="color: red">The set <b>'.$set.'</b> does not exist in YAML config.</span>');
         }
 
@@ -147,9 +147,9 @@ class IconField extends FormField
     {
         $cfg = $this->iconsSetConfig;
 
-        $cfgHash = md5($this->iconsSet . json_encode($cfg));
+        $cfgHash = md5($this->iconsSet.json_encode($cfg));
 
-        $cache = Injector::inst()->get(CacheInterface::class . '.GoldfinchIconField');
+        $cache = Injector::inst()->get(CacheInterface::class.'.GoldfinchIconField');
 
         if ($cache->has($cfgHash)) {
 
@@ -170,7 +170,7 @@ class IconField extends FormField
         */
         $schemaList = [];
 
-        if (!isset($cfg['type'])) {
+        if (! isset($cfg['type'])) {
             return;
         }
 
@@ -178,7 +178,7 @@ class IconField extends FormField
 
             $fs = new Filesystem;
 
-            $schema = BASE_PATH . '/app/_schema/icon-' . $this->iconsSet . '.json';
+            $schema = BASE_PATH.'/app/_schema/icon-'.$this->iconsSet.'.json';
 
             if ($fs->exists($schema)) {
                 $content = file_get_contents($schema);
@@ -189,7 +189,7 @@ class IconField extends FormField
                     $schemaList = $content;
 
                     foreach ($schemaList as $k => $sl) {
-                        if (!isset($sl['value']) || $sl['value'] == '') {
+                        if (! isset($sl['value']) || $sl['value'] == '') {
                             $sl['value'] = $k;
                         }
 
@@ -205,12 +205,12 @@ class IconField extends FormField
                 }
             }
 
-        } else if ($cfg['type'] == 'dir') {
+        } elseif ($cfg['type'] == 'dir') {
 
-            $sourcePath = '/' . $cfg['source'];
+            $sourcePath = '/'.$cfg['source'];
 
             $finder = new Finder();
-            $files = $finder->in(PUBLIC_PATH . $sourcePath)->files();
+            $files = $finder->in(PUBLIC_PATH.$sourcePath)->files();
 
             foreach ($files as $file) {
 
@@ -220,14 +220,14 @@ class IconField extends FormField
                 $item = [
                     'title' => '',
                     'value' => $ex[0],
-                    'source' => $sourcePath . '/' . $filename,
+                    'source' => $sourcePath.'/'.$filename,
                 ];
                 $item['admin_template'] = $this->renderIconAdminTemplate($item);
                 // $item['template'] = $this->renderIconTemplate($item); // commented out as seem to be unused
                 $schemaList[] = $item;
             }
 
-        } else if ($cfg['type'] == 'upload') {
+        } elseif ($cfg['type'] == 'upload') {
 
             $targetFolder = File::get()->filter(['ClassName' => Folder::class, 'Name' => $cfg['source']])->first();
 
@@ -255,11 +255,11 @@ class IconField extends FormField
                 // specified folder in .yml is not found
             }
 
-        } else if ($cfg['type'] == 'json') {
+        } elseif ($cfg['type'] == 'json') {
 
             $fs = new Filesystem;
 
-            $schema = BASE_PATH . '/app/_schema/' . $cfg['source'];
+            $schema = BASE_PATH.'/app/_schema/'.$cfg['source'];
 
             if ($fs->exists($schema)) {
                 $content = file_get_contents($schema);
@@ -270,7 +270,7 @@ class IconField extends FormField
                     $schemaList = $content;
 
                     foreach ($schemaList as $k => $sl) {
-                        if (!isset($sl['value']) || $sl['value'] == '') {
+                        if (! isset($sl['value']) || $sl['value'] == '') {
                             $sl['value'] = $k;
                         }
 
@@ -300,7 +300,7 @@ class IconField extends FormField
 
     public function renderIconTemplate($item, $admin = false, $set = null, $value = null): string
     {
-        if (!$set) {
+        if (! $set) {
             $cfg = $this->iconsSetConfig;
         } else {
             $cfg = $set;
@@ -316,19 +316,19 @@ class IconField extends FormField
 
         if ($cfg['type'] == 'font') {
 
-            $template = $primaryPath . 'FontItem';
+            $template = $primaryPath.'FontItem';
 
-        } else if ($cfg['type'] == 'dir') {
+        } elseif ($cfg['type'] == 'dir') {
 
-            $template = $primaryPath . 'DirItem';
+            $template = $primaryPath.'DirItem';
 
-        } else if ($cfg['type'] == 'upload') {
+        } elseif ($cfg['type'] == 'upload') {
 
-            $template = $primaryPath . 'UploadItem';
+            $template = $primaryPath.'UploadItem';
 
-        } else if ($cfg['type'] == 'json') {
+        } elseif ($cfg['type'] == 'json') {
 
-            $template = $primaryPath . 'JsonItem';
+            $template = $primaryPath.'JsonItem';
 
         }
 
@@ -336,7 +336,7 @@ class IconField extends FormField
             $item['value'] = $value;
         }
 
-        if (!isset($item['title']) || !$item['title']) {
+        if (! isset($item['title']) || ! $item['title']) {
             $item['title'] = $item['value'];
         }
 
@@ -362,14 +362,14 @@ class IconField extends FormField
                         'background-size' => 'contain',
                         'background-repeat' => 'no-repeat',
                         'background-position' => 'center',
-                        'background-image' => 'url(' . $item['source'] . ')',
+                        'background-image' => 'url('.$item['source'].')',
                     ];
                 } else {
                     $inlineStyle += [
                         'mask-size' => 'contain',
                         'mask-repeat' => 'no-repeat',
                         'mask-position' => 'center',
-                        'mask-image' => 'url(' . $item['source'] . ')',
+                        'mask-image' => 'url('.$item['source'].')',
                         'background-color' => '#43536d',
                     ];
                 }
@@ -393,14 +393,14 @@ class IconField extends FormField
                         'background-size' => 'contain',
                         'background-repeat' => 'no-repeat',
                         'background-position' => 'center',
-                        'background-image' => 'url(' . $item['source'] . ')',
+                        'background-image' => 'url('.$item['source'].')',
                     ];
                 } else {
                     $inlineStyle += [
                         'mask-size' => 'contain',
                         'mask-repeat' => 'no-repeat',
                         'mask-position' => 'center',
-                        'mask-image' => 'url(' . $item['source'] . ')',
+                        'mask-image' => 'url('.$item['source'].')',
                         'background-color' => '#43536d',
                     ];
                 }
@@ -411,7 +411,7 @@ class IconField extends FormField
             if (isset($item['color'])) {
                 if ($cfg['type'] == 'font') {
                     $inlineStyle['color'] = $item['color'];
-                } else if ($ext == 'svg') {
+                } elseif ($ext == 'svg') {
                     $inlineStyle['background-color'] = $item['color'];
                 }
             }
@@ -421,10 +421,10 @@ class IconField extends FormField
 
                 if ($size) {
                     if ($cfg['type'] == 'font') {
-                        $inlineStyle['font-size'] = $item['size'] . 'px';
+                        $inlineStyle['font-size'] = $item['size'].'px';
                     } else {
-                        $inlineStyle['width'] = $item['size'] . 'px';
-                        $inlineStyle['height'] = $item['size'] . 'px';
+                        $inlineStyle['width'] = $item['size'].'px';
+                        $inlineStyle['height'] = $item['size'].'px';
                     }
                 }
             }
@@ -432,9 +432,9 @@ class IconField extends FormField
 
         $inlineStyleStr = '';
 
-        if (!empty($inlineStyle)) {
+        if (! empty($inlineStyle)) {
             foreach ($inlineStyle as $prop => $style) {
-                $inlineStyleStr .= $prop . ':' . $style . ';';
+                $inlineStyleStr .= $prop.':'.$style.';';
             }
         }
 
@@ -534,6 +534,7 @@ class IconField extends FormField
         $field->setAttribute('data-goldfinch-icon', 'key');
 
         $this->fieldKey = $field;
+
         return $field;
     }
 
@@ -558,6 +559,7 @@ class IconField extends FormField
             $this->value = null;
             $this->fieldKey->setValue(null);
             $this->fieldData->setValue(null);
+
             return $this;
         }
 
@@ -574,6 +576,7 @@ class IconField extends FormField
 
         // Get data value
         $this->value = $this->dataValue();
+
         return $this;
     }
 
@@ -583,6 +586,7 @@ class IconField extends FormField
             $this->value = null;
             $this->fieldKey->setValue(null);
             $this->fieldData->setValue(null);
+
             return $this;
         }
 
@@ -655,7 +659,7 @@ class IconField extends FormField
     }
 
     /**
-     * @param DataObjectInterface|Object $dataObject
+     * @param  DataObjectInterface|object  $dataObject
      */
     public function saveInto(DataObjectInterface $dataObject)
     {
@@ -686,6 +690,7 @@ class IconField extends FormField
     {
         $clone = clone $this;
         $clone->setReadonly(true);
+
         return $clone;
     }
 
@@ -719,7 +724,7 @@ class IconField extends FormField
     /**
      * Validate this field
      *
-     * @param Validator $validator
+     * @param  Validator  $validator
      * @return bool
      */
     public function validate($validator)
@@ -731,6 +736,7 @@ class IconField extends FormField
     {
         $this->fieldKey->setForm($form);
         $this->fieldData->setForm($form);
+
         return parent::setForm($form);
     }
 }

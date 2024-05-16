@@ -2,7 +2,12 @@
     "name": "goldfinch/icon-field",
     "description": "Advanced Icon Field for Silverstripe",
     "type": "silverstripe-vendormodule",
-    "keywords": ["silverstripe", "icon-field", "icons-field", "silverstripe-icon"],
+    "keywords": [
+        "silverstripe",
+        "icon-field",
+        "icons-field",
+        "silverstripe-icon"
+    ],
     "license": "MIT",
     "authors": [
         {
@@ -18,7 +23,9 @@
         "goldfinch/silverstripe-jsontext": "^2.1"
     },
     "extra": {
-        "expose": ["client/dist"]
+        "expose": [
+            "client/dist"
+        ]
     },
     "autoload": {
         "psr-4": {

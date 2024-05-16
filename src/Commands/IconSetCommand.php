@@ -2,12 +2,12 @@
 
 namespace Goldfinch\IconField\Commands;
 
-use Goldfinch\Taz\Services\InputOutput;
 use Goldfinch\Taz\Console\GeneratorCommand;
-use Symfony\Component\Filesystem\Filesystem;
+use Goldfinch\Taz\Services\InputOutput;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Filesystem\Filesystem;
 
 #[AsCommand(name: 'iconset')]
 class IconSetCommand extends GeneratorCommand
@@ -32,16 +32,16 @@ class IconSetCommand extends GeneratorCommand
 
         if ($setType == 'font') {
             $sourceExample = '(eg: https://cdn.myicons.net/icons.min.css)';
-        } else if ($setType == 'dir') {
+        } elseif ($setType == 'dir') {
             $sourceExample = '(within the public dir, eg: assets/icons)';
-        } else if ($setType == 'upload') {
+        } elseif ($setType == 'upload') {
             $sourceExample = '(eg: icons)';
         }
 
         if ($setType == 'json') {
-            $source = 'icon-' . $setName . '.json';
+            $source = 'icon-'.$setName.'.json';
         } else {
-            $source = $this->askStringQuestion('Specify the source for this set ' . $sourceExample, $input, $output);
+            $source = $this->askStringQuestion('Specify the source for this set '.$sourceExample, $input, $output);
         }
 
         $setOptions = [
@@ -54,7 +54,7 @@ class IconSetCommand extends GeneratorCommand
         $config = $this->findYamlConfigFileByName('app-icons');
 
         // create new config if not exists
-        if (!$config) {
+        if (! $config) {
 
             $command = $this->getApplication()->find('make:config');
             $command->run(new ArrayInput([
@@ -70,7 +70,7 @@ class IconSetCommand extends GeneratorCommand
         // update config
         $this->updateYamlConfig(
             $config,
-            'Goldfinch\IconField\Forms\IconField' . '.icons_sets.' . $setName,
+            'Goldfinch\IconField\Forms\IconField'.'.icons_sets.'.$setName,
             $setOptions,
         );
 
@@ -87,17 +87,17 @@ class IconSetCommand extends GeneratorCommand
             }
 
             $fs->copy(
-                BASE_PATH .
-                    '/vendor/goldfinch/icon-field/components/' . $schemaTemplate,
+                BASE_PATH.
+                    '/vendor/goldfinch/icon-field/components/'.$schemaTemplate,
                 'app/_schema/icon-'.$setName.'.json',
             );
         }
 
         if ($setType == 'dir') {
 
-            $path = PUBLIC_PATH . '/' . $source;
+            $path = PUBLIC_PATH.'/'.$source;
 
-            if (!$fs->exists($path)) {
+            if (! $fs->exists($path)) {
 
                 $createSource = $this->askStringQuestion('The folder `'.$path.'` does not exist. Would you like to create it? [y/n]', $input, $output, 'y');
 
@@ -106,10 +106,10 @@ class IconSetCommand extends GeneratorCommand
                 }
             }
 
-        } else if ($setType == 'upload') {
-            $path = ASSETS_PATH . '/' . $source;
+        } elseif ($setType == 'upload') {
+            $path = ASSETS_PATH.'/'.$source;
 
-            if (!$fs->exists($path)) {
+            if (! $fs->exists($path)) {
                 $io = new InputOutput($input, $output);
                 $io->info('Youn need to create `'.$source.'` dir in `'.ASSETS_DIR.'` through CMS (/admin/assets). Make sure your uploaded icons in this folder are published.');
             }
