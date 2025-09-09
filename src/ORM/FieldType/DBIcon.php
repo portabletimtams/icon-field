@@ -4,6 +4,7 @@ namespace Goldfinch\IconField\ORM\FieldType;
 
 use Goldfinch\IconField\Forms\IconField;
 use PhpTek\JSONText\ORM\FieldType\JSONText;
+use SilverStripe\Forms\FormField;
 use SilverStripe\ORM\FieldType\DBComposite;
 
 class DBIcon extends DBComposite
@@ -29,7 +30,7 @@ class DBIcon extends DBComposite
         // 'getTag' => 'HTMLFragment',
     ];
 
-    public function forTemplate()
+    public function forTemplate(): string
     {
         return $this->getTag();
     }
@@ -126,24 +127,14 @@ class DBIcon extends DBComposite
         return $this->getParse('set') ? $this->getParse('set')['type'] : null;
     }
 
-    /**
-     * @return string
-     */
-    public function getValue()
+
+    public function getValue(): ?string
     {
-        if (! $this->exists()) {
+        if (!$this->exists()) {
             return null;
         }
 
-        // $data = $this->getData();
-
-        $key = $this->getKey();
-
-        // if (empty($key)) {
-        //     return $data;
-        // }
-
-        return $key; // $data . ' ' . $key;
+        return $this->getKey();
     }
 
     /**
@@ -190,10 +181,7 @@ class DBIcon extends DBComposite
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function exists()
+    public function exists(): bool
     {
         return is_numeric($this->getData());
     }
@@ -239,7 +227,7 @@ class DBIcon extends DBComposite
      * @param  array  $params
      * @return FormField
      */
-    public function scaffoldFormField($title = null, $params = null)
+    public function scaffoldFormField($title = null, $params = null): ?FormField
     {
         if ($params && isset($params['static'])) {
             $static = $params['static'];

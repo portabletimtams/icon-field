@@ -14,26 +14,19 @@ Advanced Icon Field for Silverstripe. It can handle up to 4 different types of i
 
 ## Install
 
+Add the following to your composer.json file:
+```
+"repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/portabletimtams/silverstripe-jsontext.git"
+    }
+],
+```
+
+Install the module using composer:
 ```bash
 composer require goldfinch/icon-field
-```
-
-## Available Taz commands
-
-If you haven't used [**Taz**](https://github.com/goldfinch/taz)🌪️ before, _taz_ file must be presented in your root project folder `cp vendor/goldfinch/taz/taz taz`
-
----
-
-> Add new icon set
-
-```bash
-php taz iconset
-```
-
-> Publish icon templates
-
-```bash
-php taz vendor:icon-field:templates
 ```
 
 ## Quick Bootstrap icon set setup
